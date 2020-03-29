@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import axios from "axios";
 
-const apiUrl = "http://localhost:5000";
+const apiUrl = "https://r-upload-file.herokuapp.com/";
 const FileUpload = ({
   disabled,
   file,
