@@ -53,7 +53,7 @@ function App() {
     let dataStr = JSON.stringify(categories);
     let dataUri =
       "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-    let exportFileDefaultName = "condif.json";
+    let exportFileDefaultName = "config.json";
     let linkElement = document.createElement("a");
     linkElement.setAttribute("href", dataUri);
     linkElement.setAttribute("download", exportFileDefaultName);
