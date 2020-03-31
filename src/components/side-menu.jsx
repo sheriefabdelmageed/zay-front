@@ -41,7 +41,7 @@ class SideMenu extends Component {
                 c === "Promotion" ? `${itemStyle} active` : `${itemStyle}`
               }
             >
-              <i className="fas fa-spinner mr-2"></i>
+              <i className="fa fa-list mr-2"></i>
               {c}
             </div>
           ))}
@@ -52,8 +52,8 @@ class SideMenu extends Component {
           className="btn btn-success btn-block"
           onClick={this.getJSON}
         >
-          {this.state.loading && <i className="fa fa-list"></i>} Download JSON
-          File
+          {this.state.loading && <i className="fas fa-spinner"></i>} Download
+          JSON File
         </button>
       </Fragment>
     );
