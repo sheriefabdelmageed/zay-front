@@ -1,10 +1,20 @@
 import React, { Component, Fragment } from "react";
-import { downloadConfgFile } from "./../services/slides-service";
+import { downloadConfgFile, getCategories } from "./../services/slides-service";
+
 class SideMenu extends Component {
   state = {
-    categories: ["Home", "Promotion", "Branding", "Operations"],
+    categories: [],
     loading: false
   };
+
+  async componentDidMount() {
+    try {
+      const { data: categories } = await getCategories();
+      this.setState({ categories });
+    } catch (error) {
+      return;
+    }
+  }
 
   getJSON = async () => {
     this.setState({ loading: true });
@@ -29,11 +39,11 @@ class SideMenu extends Component {
     const itemStyle = "list-group-item list-group-item-action";
     return (
       <Fragment>
-        <h5 className="mt-3">
+        <h6 className="mt-3">
           <i className="fa fa-list mr-2"></i>
           Categories
-        </h5>
-        <div className="list-group-flush mb-4">
+        </h6>
+        <div className="list-group-flush mb-4 pb-4">
           {categories.map(c => (
             <div
               key={c}
@@ -45,16 +55,17 @@ class SideMenu extends Component {
               {c}
             </div>
           ))}
+          <div className="list-group-item list-group-item-action mb-4">
+            <button
+              disabled={this.state.loading}
+              className="btn btn-success btn-sm"
+              onClick={this.getJSON}
+            >
+              {this.state.loading && <i className="fas fa-spinner"></i>}{" "}
+              Download JSON File
+            </button>
+          </div>
         </div>
-
-        <button
-          disabled={this.state.loading}
-          className="btn btn-success btn-block"
-          onClick={this.getJSON}
-        >
-          {this.state.loading && <i className="fas fa-spinner"></i>} Download
-          JSON File
-        </button>
       </Fragment>
     );
   }

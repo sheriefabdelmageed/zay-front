@@ -11,6 +11,8 @@
 
 .side-menu .list-group-item {
   background-color: #f1f1f1;
+  padding: 5px;
+  font-size: 12px;
 }
 
 .side-menu .active {
@@ -43,4 +45,38 @@
   border: solid 1px gainsboro;
   margin: 5px;
   padding: 10px;
+}
+
+.table {
+  font-size: 14px;
+}
+
+td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+input,
+select {
+  font-size: 12px;
+}
+
+.container-files {
+  background-color: white;
+  border: #f1f1f1 dotted 1px;
+  padding: 5px;
+}
+
+.container-files:hover {
+  background-color: gainsboro;
+  border: blue dotted 1px;
+}
+
+.upload-file:hover {
+  text-decoration: underline;
+}
+
+p {
+  text-align: center;
 }

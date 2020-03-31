@@ -7,6 +7,10 @@ export const getSlides = () => {
   return http.get(apiUrl + "/categories/Promotion");
 };
 
+export const getCategories = () => {
+  return http.get(apiUrl + "/categories");
+};
+
 export const saveSlide = obj => {
   return http.post(apiUrl + "/update", obj);
 };

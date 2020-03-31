@@ -3,12 +3,14 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import { getSlides, saveSlide } from "./../services/slides-service";
 import FileUpload from "./file-upload";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 class Slides extends Component {
   state = {
     slides: [],
     selectedSlide: {},
-    selectedIndex: 0,
+    selectedIndex: null,
     editMode: false,
     loading: true,
     file: "",
@@ -17,12 +19,27 @@ class Slides extends Component {
     collections: ["Sparkles", "Accessories", "Blues"]
   };
 
-  reset = () => {
-    this.setState({ file: "", filename: "Change Image", uploadedFile: {} });
-  };
+  addNewSlide = () => {
+    const selectedSlide = {
+      ImageURL: "",
+      Collection: "",
+      Text: [
+        {
+          Locale: "en",
+          Headline: "",
+          Tagline: "",
+          TextColor: "000000"
+        },
+        {
+          Locale: "ar",
+          Headline: "",
+          Tagline: "",
+          Color: "FFFFFF"
+        }
+      ]
+    };
 
-  onSelect = c => {
-    this.reset();
+    this.setState({ selectedSlide, editMode: true });
   };
 
   handleUpload = filepath => {
@@ -56,12 +73,50 @@ class Slides extends Component {
     });
   };
 
+  deletSlide = s => {
+    try {
+      confirmAlert({
+        title: "Confirm to delete",
+        message: "Are you sure to do this.",
+        buttons: [
+          {
+            label: "Yes",
+            onClick: async () => {
+              const index = this.getSelectedSlideIndex(s);
+              const slides = [...this.state.slides];
+              slides.splice(index, 1);
+
+              const obj = {
+                key: "Promotion",
+                value: { Images: slides }
+              };
+
+              await saveSlide(obj);
+              toast.success("Changes saved successfully");
+              this.setState({ slides });
+            }
+          },
+          {
+            label: "No",
+            onClick: () => {}
+          }
+        ]
+      });
+    } catch (error) {
+      toast.error("Error delete slide");
+    }
+  };
+
   saveChanges = async () => {
-    debugger;
     try {
       this.setState({ loading: true });
       const slides = [...this.state.slides];
-      slides[this.state.selectedIndex] = this.state.selectedSlide;
+      const { selectedIndex } = this.state;
+      if (selectedIndex) {
+        slides[selectedIndex] = this.state.selectedSlide;
+      } else {
+        slides.push(this.state.selectedSlide);
+      }
 
       const obj = {
         key: "Promotion",
@@ -71,7 +126,12 @@ class Slides extends Component {
       await saveSlide(obj);
       toast.success("Changes saved successfully");
 
-      this.setState({ slides, editMode: false, loading: false });
+      this.setState({
+        slides,
+        editMode: false,
+        loading: false,
+        selectedIndex: null
+      });
     } catch (error) {
       this.setState({ loading: false });
       toast.error("Can not save data ");
@@ -79,23 +139,50 @@ class Slides extends Component {
     }
   };
 
-  handleArInputChane = e => {
-    const value = e.target.value;
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.Text[0].Headline = value;
-    this.setState({ selectedSlide });
-  };
-
-  handleEnInputChane = e => {
-    const value = e.target.value;
+  handleArHeadLineChange = e => {
+    const value = e.currentTarget.value;
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.Text[1].Headline = value;
     this.setState({ selectedSlide });
   };
 
+  handleEnHeadLineChange = e => {
+    const value = e.currentTarget.value;
+    const selectedSlide = { ...this.state.selectedSlide };
+    selectedSlide.Text[0].Headline = value;
+    this.setState({ selectedSlide });
+  };
+
+  handleArTagLineChange = e => {
+    const value = e.currentTarget.value;
+    const selectedSlide = { ...this.state.selectedSlide };
+    selectedSlide.Text[1].Tagline = value;
+    this.setState({ selectedSlide });
+  };
+
+  handleEnTagLineChange = e => {
+    const value = e.currentTarget.value;
+    const selectedSlide = { ...this.state.selectedSlide };
+    selectedSlide.Text[0].Tagline = value;
+    this.setState({ selectedSlide });
+  };
+
+  handleArColorChange = e => {
+    const value = e.currentTarget.value;
+    const selectedSlide = { ...this.state.selectedSlide };
+    selectedSlide.Text[1].Color = value;
+    this.setState({ selectedSlide });
+  };
+
+  handleEnColorChange = e => {
+    const value = e.currentTarget.value;
+    const selectedSlide = { ...this.state.selectedSlide };
+    selectedSlide.Text[0].TextColor = value;
+    this.setState({ selectedSlide });
+  };
+
   handleCollectionInputChange = e => {
-    debugger;
-    const value = e.target.value;
+    const value = e.currentTarget.value;
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.Collection = value;
     this.setState({ selectedSlide });
@@ -124,10 +211,19 @@ class Slides extends Component {
           <div>
             {!editMode && (
               <div>
-                <h4>
+                <h5>
                   <i className="far fa-images mr-2"></i>
                   Promotion Section
-                </h4>
+                </h5>
+                <div className="row mb-2 d-flex justify-content-end pr-4">
+                  <button
+                    className="btn btn-primary"
+                    onClick={this.addNewSlide}
+                  >
+                    <i className="fas fa-plus mr-2"></i>
+                    Add new slide
+                  </button>
+                </div>
                 <table className="table borders">
                   <thead>
                     <tr>
@@ -135,7 +231,10 @@ class Slides extends Component {
                       <th>Collection</th>
                       <th>Headline-AR</th>
                       <th>Headline-EN</th>
-                      <th></th>
+                      <th>Tagline-AR</th>
+                      <th>Tagline-EN</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -144,17 +243,24 @@ class Slides extends Component {
                         <td>
                           <img
                             onClick={() => this.editSlide(s)}
-                            style={{ width: "100px", cursor: "pointer" }}
-                            src={s.ImageURL}
+                            style={{ width: "80px", cursor: "pointer" }}
+                            src={s.ImageURL || "/assets/no-image.png"}
                             alt={s.collection}
                           />
                         </td>
                         <td>{s.Collection}</td>
-                        <td>{s.Text[0].Headline}</td>
                         <td>{s.Text[1].Headline}</td>
+                        <td>{s.Text[0].Headline}</td>
+                        <td>{s.Text[1].Tagline}</td>
+                        <td>{s.Text[0].Tagline}</td>
                         <td>
                           <button onClick={() => this.editSlide(s)}>
                             <i className="fa fa-edit"></i>
+                          </button>
+                        </td>
+                        <td>
+                          <button onClick={() => this.deletSlide(s)}>
+                            <i className="fas fa-trash-alt"></i>
                           </button>
                         </td>
                       </tr>
@@ -166,11 +272,11 @@ class Slides extends Component {
 
             {editMode && (
               <div className="row">
-                <div className="col-md-4">
+                <div className="col-md-4 col-sm-12">
                   <img
                     style={{ width: "100%" }}
                     className="image"
-                    src={selectedSlide.ImageURL}
+                    src={selectedSlide.ImageURL || "/assets/no-image.png"}
                     alt={selectedSlide.collection}
                   />
                   <hr />
@@ -182,53 +288,109 @@ class Slides extends Component {
                     onUploadComplete={this.handleUpload}
                   />
                 </div>
-                <div className="col-md-8">
-                  <h4>
+                <div className="col-md-7 col-sm-12">
+                  <h5>
                     <i className="far fa-images mr-2"></i>
                     Slide Details
-                  </h4>
+                  </h5>
                   <hr />
                   <form className="form">
-                    <div className="form-group">
-                      <label htmlFor="collection">Collection</label>
-                      <select
-                        className="form-control"
-                        name="collection"
-                        id="collection"
-                        value={selectedSlide.Collection}
-                        onChange={this.handleCollectionInputChange}
-                      >
-                        {this.state.collections.map(c => (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
                     <div className="form-row">
-                      <div className="form-group col-md-6 col-sm-12">
+                      <div className="form-group col-md-5">
+                        <label htmlFor="collection">Collection</label>
+                        <select
+                          className="form-control"
+                          name="collection"
+                          id="collection"
+                          value={selectedSlide.Collection}
+                          onChange={this.handleCollectionInputChange}
+                        >
+                          {this.state.collections.map(c => (
+                            <option key={c} value={c}>
+                              {c}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="form-row">
+                      <div className="form-group col-md-5 col-sm-12">
                         <label htmlFor="ar">Arabic Headline</label>
                         <input
-                          onChange={this.handleArInputChane}
+                          onChange={this.handleArHeadLineChange}
                           type="text"
+                          placeholder="Arabic Headline"
                           id="ar"
                           name="ar"
-                          className="form-control"
-                          value={selectedSlide.Text[0].Headline}
-                        />
-                      </div>
-                      <div className="form-group col-md-6 col-sm-12">
-                        <label htmlFor="en">English Headline</label>
-                        <input
-                          onChange={this.handleEnInputChane}
-                          type="text"
-                          id="en"
-                          name="en"
                           className="form-control"
                           value={selectedSlide.Text[1].Headline}
                         />
                       </div>
+                      <div className="form-group col-md-5 offset-md-1 col-sm-12">
+                        <label htmlFor="en">English Headline</label>
+                        <input
+                          onChange={this.handleEnHeadLineChange}
+                          placeholder="English Headline"
+                          type="text"
+                          id="en"
+                          name="en"
+                          className="form-control"
+                          value={selectedSlide.Text[0].Headline}
+                        />
+                      </div>
                     </div>
+                    <div className="form-row">
+                      <div className="form-group col-md-5 col-sm-12">
+                        <label htmlFor="ar">Arabic Tagline</label>
+                        <input
+                          onChange={this.handleArTagLineChange}
+                          placeholder="Arabic Tagline"
+                          type="text"
+                          id="ar"
+                          name="ar"
+                          className="form-control"
+                          value={selectedSlide.Text[1].Tagline}
+                        />
+                      </div>
+                      <div className="form-group form-group col-md-5 offset-md-1 col-sm-12">
+                        <label htmlFor="en">English Tagline</label>
+                        <input
+                          placeholder="English Tagline"
+                          onChange={this.handleEnTagLineChange}
+                          type="text"
+                          id="en"
+                          name="en"
+                          className="form-control"
+                          value={selectedSlide.Text[0].Tagline}
+                        />
+                      </div>
+                    </div>
+                    <div className="form-row">
+                      <div className="form-group col-md-5 col-sm-12">
+                        <label htmlFor="color">Color for Arabic</label>
+                        <input
+                          className="form-control"
+                          type="color"
+                          id="color"
+                          name="color"
+                          value={`${selectedSlide.Text[1].Color}`}
+                          onChange={this.handleArColorChange}
+                        />
+                      </div>
+                      <div className="form-group form-group col-md-5 offset-md-1 col-sm-12">
+                        <label htmlFor="color">Color for English</label>
+                        <input
+                          className="form-control"
+                          type="color"
+                          id="color"
+                          name="color"
+                          value={`${selectedSlide.Text[0].TextColor}`}
+                          onChange={this.handleEnColorChange}
+                        />
+                      </div>
+                    </div>
+
                     <hr />
                     <div className="form-group">
                       <button
