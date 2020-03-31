@@ -41,7 +41,7 @@ class SideMenu extends Component {
                 c === "Promotion" ? `${itemStyle} active` : `${itemStyle}`
               }
             >
-              <i className="fa fa-list mr-2"></i>
+              <i className="fas fa-spinner mr-2"></i>
               {c}
             </div>
           ))}
