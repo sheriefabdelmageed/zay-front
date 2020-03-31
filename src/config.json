@@ -1,4 +1,4 @@
 {
-  "api": "http://localhost:5000",
-  "api-online": "https://r-upload-file.herokuapp.com"
+  "api-local": "http://localhost:5000",
+  "api": "https://r-upload-file.herokuapp.com"
 }
