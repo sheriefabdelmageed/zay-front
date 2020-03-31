@@ -114,9 +114,9 @@ class Slides extends Component {
       const { selectedIndex } = this.state;
 
       if (selectedIndex === null) {
-        slides[selectedIndex] = this.state.selectedSlide;
-      } else {
         slides.push(this.state.selectedSlide);
+      } else {
+        slides[selectedIndex] = this.state.selectedSlide;
       }
 
       const obj = {

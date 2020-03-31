@@ -24,21 +24,8 @@
   position: fixed;
   height: 100%;
   display: flex;
-  margin-top: -100 !important;
-  margin-left: -200 !important;
   justify-content: center;
   align-items: center;
-}
-
-@media only screen and (max-width: 768px) {
-  .side-menu {
-    position: inherit;
-    height: auto;
-  }
-  .spinner-container {
-    margin-top: auto;
-    margin-left: auto;
-  }
 }
 
 .details-form {
@@ -79,4 +66,11 @@ select {
 
 p {
   text-align: center;
+}
+
+@media only screen and (max-width: 768px) {
+  .side-menu {
+    position: inherit;
+    height: auto;
+  }
 }
