@@ -1,17 +1,19 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import axios from "axios";
+import config from "./../config.json";
 
-const apiUrl = "https://r-upload-file.herokuapp.com";
-const FileUpload = ({
-  disabled,
-  file,
-  filename,
-  uploadedFile,
-  onUploadComplete,
-  onChange
-}) => {
+const apiUrl = config.api;
+const FileUpload = ({ onUploadComplete }) => {
+  const [file, setFile] = useState("");
+  const [filename, setFilename] = useState("Change Image");
+
   const onFileChange = e => {
-    onChange(e);
+    try {
+      const file = e.target.files[0];
+      const filename = file.name;
+      setFile(file);
+      setFilename(filename);
+    } catch (error) {}
   };
   const onSubmit = async e => {
     e.preventDefault();
@@ -24,9 +26,11 @@ const FileUpload = ({
         "Content-Type": "multipart/form-data"
       });
 
-      let { filename, filepath } = res.data;
+      let { filepath } = res.data;
       filepath = apiUrl + filepath;
-      onUploadComplete({ filename, filepath });
+      onUploadComplete(filepath);
+      setFilename("Change Image");
+      setFile("");
     } catch (error) {
       console.log(error);
     }
@@ -35,12 +39,12 @@ const FileUpload = ({
   return (
     <Fragment>
       <div className="row">
-        <div className="col-md-7">
+        <div className="col-md-12">
           <form onSubmit={onSubmit}>
             <div className="custom-file mb-4">
               <input
-                disabled={disabled}
                 type="file"
+                accept="image/*"
                 className="custom-file-input"
                 id="customFile"
                 onChange={onFileChange}
@@ -51,22 +55,11 @@ const FileUpload = ({
             </div>
             <input
               type="submit"
-              disabled={disabled}
+              disabled={!file}
               value="Upload"
               className="btn btn-primary btn-block mb-4"
             />
           </form>
-        </div>
-        <div className="col-md-2">
-          <div className="row">
-            {uploadedFile ? (
-              <img
-                style={{ width: "100%" }}
-                src={uploadedFile.filepath}
-                alt={uploadedFile.filename}
-              />
-            ) : null}
-          </div>
         </div>
       </div>
     </Fragment>
