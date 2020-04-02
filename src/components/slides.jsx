@@ -5,6 +5,7 @@ import { getSlides, saveSlide } from "./../services/slides-service";
 import FileUpload from "./file-upload";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import getCollections from "./../services/collection";
 
 class Slides extends Component {
   state = {
@@ -16,7 +17,7 @@ class Slides extends Component {
     file: "",
     filename: "Change Image",
     uploadedFile: {},
-    collections: ["Sparkles", "Accessories", "Blues"]
+    collections: []
   };
 
   addNewSlide = () => {
@@ -43,7 +44,6 @@ class Slides extends Component {
   };
 
   handleUpload = filepath => {
-    debugger;
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.ImageURL = filepath;
     this.setState({ selectedSlide });
@@ -56,8 +56,11 @@ class Slides extends Component {
   async componentDidMount() {
     try {
       const { data } = await getSlides();
+      const { data: dataCollection } = await getCollections();
+      const collections = dataCollection.data.data.collections.edges;
+      console.log(collections);
       const slides = data.Images;
-      this.setState({ slides, loading: false, editMode: false });
+      this.setState({ slides, loading: false, editMode: false, collections });
     } catch (error) {
       toast.error("Failed to load data");
     }
@@ -307,8 +310,8 @@ class Slides extends Component {
                           onChange={this.handleCollectionInputChange}
                         >
                           {this.state.collections.map(c => (
-                            <option key={c} value={c}>
-                              {c}
+                            <option key={c.node.id} value={c.node.title}>
+                              {c.node.title}
                             </option>
                           ))}
                         </select>
