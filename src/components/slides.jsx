@@ -309,6 +309,7 @@ class Slides extends Component {
                           value={selectedSlide.Collection}
                           onChange={this.handleCollectionInputChange}
                         >
+                          <option value="">Select a collection</option>
                           {this.state.collections.map(c => (
                             <option key={c.node.id} value={c.node.title}>
                               {c.node.title}
