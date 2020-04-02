@@ -58,7 +58,6 @@ class Slides extends Component {
       const { data } = await getSlides();
       const { data: dataCollection } = await getCollections();
       const collections = dataCollection.data.data.collections.edges;
-      console.log(collections);
       const slides = data.Images;
       this.setState({ slides, loading: false, editMode: false, collections });
     } catch (error) {
