@@ -256,24 +256,24 @@ class Slides extends Component {
                         <td className="col-lg-1 col-md-2 col-sm-4">
                           {s.Collection}
                         </td>
-                        <td className="col-lg-1 col-md-2">
+                        <td className="col-lg-1 col-md-2 d-sm-none">
                           {s.Text[1].Headline}
                         </td>
                         <td className="col-lg-1 col-md-2 col-sm-4">
                           {s.Text[0].Headline}
                         </td>
-                        <td className="col-lg-3 col-md-2">
+                        <td className="col-lg-3 col-md-2 d-sm-none">
                           {s.Text[1].Tagline}
                         </td>
-                        <td className="col-lg-3 col-md-2">
+                        <td className="col-lg-3 col-md-2 d-sm-none">
                           {s.Text[0].Tagline}
                         </td>
-                        <td className="col-lg-1">
+                        <td className="col-lg-1 d-md-none">
                           <button onClick={() => this.editSlide(s)}>
                             <i className="fa fa-edit"></i>
                           </button>
                         </td>
-                        <td className="col-lg-1">
+                        <td className="col-lg-1 d-md-none">
                           <button onClick={() => this.deletSlide(s)}>
                             <i className="fas fa-trash-alt"></i>
                           </button>
