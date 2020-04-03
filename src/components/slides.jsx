@@ -230,22 +230,20 @@ class Slides extends Component {
                 <table className="table borders">
                   <thead>
                     <tr>
-                      <th className="col-lg-1 col-md-2 col-sm-4"></th>
-                      <th className="col-lg-1 col-md-2 col-sm-4">Collection</th>
-                      <th className="col-lg-1 col-md-2">Headline-AR</th>
-                      <th className="col-lg-1 col-md-2 col-sm-4">
-                        Headline-EN
-                      </th>
-                      <th className="col-lg-3 col-md-2">Tagline-AR</th>
-                      <th className="col-lg-3 col-md-2">Tagline-EN</th>
-                      <th className="col-lg-1">Edit</th>
-                      <th className="col-lg-1">Delete</th>
+                      <th></th>
+                      <th>Collection</th>
+                      <th>Headline-AR</th>
+                      <th>Headline-EN</th>
+                      <th>Tagline-AR</th>
+                      <th>Tagline-EN</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
                     </tr>
                   </thead>
                   <tbody>
                     {slides.map(s => (
                       <tr key={s.ImageURL}>
-                        <td className="col-lg-1 col-md-2 col-sm-4">
+                        <td>
                           <img
                             onClick={() => this.editSlide(s)}
                             style={{ width: "80px", cursor: "pointer" }}
@@ -253,27 +251,17 @@ class Slides extends Component {
                             alt={s.collection}
                           />
                         </td>
-                        <td className="col-lg-1 col-md-2 col-sm-4">
-                          {s.Collection}
-                        </td>
-                        <td className="col-lg-1 col-md-2 d-sm-none">
-                          {s.Text[1].Headline}
-                        </td>
-                        <td className="col-lg-1 col-md-2 col-sm-4">
-                          {s.Text[0].Headline}
-                        </td>
-                        <td className="col-lg-3 col-md-2 d-sm-none">
-                          {s.Text[1].Tagline}
-                        </td>
-                        <td className="col-lg-3 col-md-2 d-sm-none">
-                          {s.Text[0].Tagline}
-                        </td>
-                        <td className="col-lg-1 d-md-none">
+                        <td>{s.Collection}</td>
+                        <td>{s.Text[1].Headline}</td>
+                        <td>{s.Text[0].Headline}</td>
+                        <td>{s.Text[1].Tagline}</td>
+                        <td>{s.Text[0].Tagline}</td>
+                        <td>
                           <button onClick={() => this.editSlide(s)}>
                             <i className="fa fa-edit"></i>
                           </button>
                         </td>
-                        <td className="col-lg-1 d-md-none">
+                        <td>
                           <button onClick={() => this.deletSlide(s)}>
                             <i className="fas fa-trash-alt"></i>
                           </button>
