@@ -125,7 +125,7 @@ class Home extends Component {
   };
 
   handleColorChange = e => {
-    const value = e.currentTarget.value.subString(1);
+    const value = e.currentTarget.value.substring(1);
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.TextColor = value;
     this.setState({ selectedSlide });

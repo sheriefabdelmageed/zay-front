@@ -105,14 +105,14 @@ class Banner extends Component {
   };
 
   handleArColorChange = e => {
-    const value = e.currentTarget.value.subString(1);
+    const value = e.currentTarget.value.substring(1);
     const data = { ...this.state.data };
     data.Text[1].Color = value;
     this.setState({ data });
   };
 
   handleEnColorChange = e => {
-    const value = e.currentTarget.value.subString(1);
+    const value = e.currentTarget.value.substring(1);
     const data = { ...this.state.data };
     data.Text[0].TextColor = value;
     this.setState({ data });
