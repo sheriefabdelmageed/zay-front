@@ -105,14 +105,14 @@ class Banner extends Component {
   };
 
   handleArColorChange = e => {
-    const value = e.currentTarget.value;
+    const value = e.currentTarget.value.subString(1);
     const data = { ...this.state.data };
     data.Text[1].Color = value;
     this.setState({ data });
   };
 
   handleEnColorChange = e => {
-    const value = e.currentTarget.value;
+    const value = e.currentTarget.value.subString(1);
     const data = { ...this.state.data };
     data.Text[0].TextColor = value;
     this.setState({ data });
@@ -292,7 +292,7 @@ class Banner extends Component {
                           type="color"
                           id="color"
                           name="color"
-                          value={`${data.Text[1].Color}`}
+                          value={`#${data.Text[1].Color}`}
                           onChange={this.handleArColorChange}
                         />
                       </div>
@@ -303,7 +303,7 @@ class Banner extends Component {
                           type="color"
                           id="color"
                           name="color"
-                          value={`${data.Text[0].TextColor}`}
+                          value={`#${data.Text[0].TextColor}`}
                           onChange={this.handleEnColorChange}
                         />
                       </div>

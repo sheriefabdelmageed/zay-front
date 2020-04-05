@@ -125,7 +125,7 @@ class Home extends Component {
   };
 
   handleColorChange = e => {
-    const { value } = e.currentTarget;
+    const value = e.currentTarget.value.subString(1);
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.TextColor = value;
     this.setState({ selectedSlide });
@@ -284,7 +284,7 @@ class Home extends Component {
                             type="color"
                             className="color-circle"
                             disabled
-                            value={s.TextColor}
+                            value={`#${s.TextColor}`}
                           />
                         </td>
                         <td>
@@ -338,7 +338,7 @@ class Home extends Component {
                           id="textColor"
                           name="textColor"
                           type="color"
-                          value={`${selectedSlide.TextColor}`}
+                          value={`#${selectedSlide.TextColor}`}
                           onChange={this.handleColorChange}
                         />
                       </div>

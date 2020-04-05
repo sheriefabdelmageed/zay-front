@@ -128,14 +128,14 @@ class Slides extends Component {
   };
 
   handleArColorChange = e => {
-    const value = e.currentTarget.value;
+    const value = e.currentTarget.value.subString(1);
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.Text[1].Color = value;
     this.setState({ selectedSlide });
   };
 
   handleEnColorChange = e => {
-    const value = e.currentTarget.value;
+    const value = e.currentTarget.value.subString(1);
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.Text[0].TextColor = value;
     this.setState({ selectedSlide });
@@ -392,7 +392,7 @@ class Slides extends Component {
                           type="color"
                           id="color"
                           name="color"
-                          value={`${selectedSlide.Text[1].Color}`}
+                          value={`#${selectedSlide.Text[1].Color}`}
                           onChange={this.handleArColorChange}
                         />
                       </div>
@@ -403,7 +403,7 @@ class Slides extends Component {
                           type="color"
                           id="color"
                           name="color"
-                          value={`${selectedSlide.Text[0].TextColor}`}
+                          value={`#${selectedSlide.Text[0].TextColor}`}
                           onChange={this.handleEnColorChange}
                         />
                       </div>
