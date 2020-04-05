@@ -4,8 +4,9 @@ import { toast } from "react-toastify";
 import { getBanner, saveBanner } from "./../services/banner-service";
 import FileUpload from "./file-upload";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import getCollections from "./../services/collection";
+import collection from "./../services/collection";
 
+const getCollections = collection.getCollections;
 class Banner extends Component {
   state = {
     data: {},

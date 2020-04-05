@@ -47,6 +47,12 @@ class SideMenu extends Component {
     else return "fa fa-flag mr-2";
   };
 
+  getLinkName = c => {
+    if (c === "Promotion") return "Slider";
+    else if (c === "Home") return "Trending";
+    else if (c === "HomePageTag") return "Banner";
+  };
+
   render() {
     const { categories } = this.state;
     const itemStyle = "list-group-item list-group-item-action";
@@ -61,7 +67,7 @@ class SideMenu extends Component {
           {categories.map(c => (
             <div key={c} className={itemStyle}>
               <i className={this.getIcon(c)}></i>
-              <NavLink to={`/${c}`}>{c}</NavLink>
+              <NavLink to={`/${c}`}>{this.getLinkName(c)}</NavLink>
             </div>
           ))}
           <div className="list-group-item list-group-item-action mb-4">

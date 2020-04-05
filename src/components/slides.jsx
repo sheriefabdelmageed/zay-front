@@ -5,7 +5,9 @@ import { getSlides, saveSlide } from "./../services/slides-service";
 import FileUpload from "./file-upload";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import getCollections from "./../services/collection";
+import collection from "./../services/collection";
+
+const getCollections = collection.getCollections;
 
 const tempCollections = [
   { node: { id: 1, title: "Occasions" } },
@@ -55,6 +57,7 @@ class Slides extends Component {
   }
 
   editSlide = s => {
+    debugger;
     const index = this.getSelectedSlideIndex(s);
     const selectedSlide = { ...s };
     this.setState({
@@ -292,7 +295,7 @@ class Slides extends Component {
                     style={{ width: "100%" }}
                     className="image"
                     src={selectedSlide.ImageURL || "/assets/no-image.png"}
-                    alt={selectedSlide.collection}
+                    alt={selectedSlide.Collection}
                   />
                   <hr />
                   <FileUpload

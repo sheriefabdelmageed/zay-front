@@ -4,7 +4,10 @@ import { toast } from "react-toastify";
 import { getSlides, saveSlide } from "./../services/home-service";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import getCollections from "./../services/collection";
+import collection from "./../services/collection";
+
+const getCollections = collection.getCollections;
+const getSubCollections = collection.getSubCollections;
 
 const tempCollections = [
   { node: { id: 1, title: "Occasions" } },
@@ -14,14 +17,10 @@ const tempCollections = [
   { node: { id: 5, title: "Art Night" } }
 ];
 const tempSubCollections = [
-  { node: { id: 1, title: "Blacks" } },
-  { node: { id: 2, title: "Gemtones" } },
-  { node: { id: 3, title: "Pinks and Florals" } },
-  { node: { id: 4, title: "Brights" } },
-  { node: { id: 5, title: "Neutrals" } },
-  { node: { id: 6, title: "Cocktail and Party" } },
-  { node: { id: 7, title: "Reception" } },
-  { node: { id: 8, title: "Wedding" } }
+  { node: { id: 1, title: "The Ramadan Edit" } },
+  { node: { id: 2, title: "Dresses" } },
+  { node: { id: 3, title: "Luxe Bags" } },
+  { node: { id: 4, title: "Accessories" } }
 ];
 
 class Home extends Component {
@@ -45,20 +44,19 @@ class Home extends Component {
   async componentDidMount() {
     try {
       const { data } = await getSlides();
+
       const { data: dataCollection } = await getCollections();
       let Collections = dataCollection?.data?.data?.collections?.edges;
-      let SubCollectionsList = Collections;
       if (!Collections) {
         Collections = tempCollections;
-        SubCollectionsList = tempSubCollections;
       }
+
       const slides = data.Content;
       this.setState({
         slides,
         loading: false,
         editMode: false,
-        Collections,
-        SubCollectionsList
+        Collections
       });
     } catch (error) {
       console.log(error);
@@ -66,14 +64,23 @@ class Home extends Component {
     }
   }
 
-  editSlide = s => {
+  editSlide = async s => {
     const index = this.getSelectedSlideIndex(s);
     const selectedSlide = { ...s };
     if (!selectedSlide.SubCollections) selectedSlide.SubCollections = [];
+
+    let { data: dataCollection } = await getSubCollections();
+    let SubCollectionsList = dataCollection?.data?.data?.collections?.edges;
+    SubCollectionsList = null;
+    if (!SubCollectionsList) {
+      SubCollectionsList = tempSubCollections;
+    }
+
     this.setState({
       editMode: true,
       selectedSlide,
-      selectedIndex: index
+      selectedIndex: index,
+      SubCollectionsList
     });
   };
 
@@ -131,11 +138,21 @@ class Home extends Component {
     this.setState({ selectedSlide });
   };
 
-  handleCollectionInputChange = e => {
+  handleCollectionInputChange = async e => {
+    debugger;
     const value = e.currentTarget.value;
+    if (!value) return null;
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.Collection = value;
-    this.setState({ selectedSlide });
+
+    let { data: dataCollection } = await getSubCollections();
+    let SubCollectionsList = dataCollection?.data?.metafields;
+    SubCollectionsList = null;
+    if (!SubCollectionsList) {
+      SubCollectionsList = tempSubCollections;
+    }
+
+    this.setState({ selectedSlide, SubCollectionsList });
   };
 
   getSelectedSlideIndex = selectedSlide => {
@@ -157,8 +174,8 @@ class Home extends Component {
         Height: ""
       }
     };
-
-    this.setState({ selectedSlide, editMode: true });
+    const SubCollectionsList = [];
+    this.setState({ selectedSlide, editMode: true, SubCollectionsList });
   };
 
   deletSlide = s => {
