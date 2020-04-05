@@ -57,7 +57,6 @@ class Slides extends Component {
   }
 
   editSlide = s => {
-    debugger;
     const index = this.getSelectedSlideIndex(s);
     const selectedSlide = { ...s };
     this.setState({
@@ -231,7 +230,7 @@ class Slides extends Component {
               <div>
                 <h5>
                   <i className="far fa-images mr-2"></i>
-                  Promotion Section
+                  Slider Section
                 </h5>
                 <div className="row mb-2 d-flex justify-content-end pr-4">
                   <button

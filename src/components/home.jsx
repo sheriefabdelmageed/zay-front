@@ -252,7 +252,7 @@ class Home extends Component {
               <div>
                 <h5>
                   <i className="far fa-images mr-2"></i>
-                  Home Section
+                  Trending Section
                 </h5>
                 <div className="row mb-2 d-flex justify-content-end pr-4">
                   <button
