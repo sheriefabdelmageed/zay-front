@@ -9,6 +9,7 @@
     "axios": "^0.19.2",
     "lodash": "^4.17.15",
     "react": "^16.13.1",
+    "react-chips": "^0.8.0",
     "react-confirm-alert": "^2.6.1",
     "react-dom": "^16.13.1",
     "react-dropzone": "^10.2.2",

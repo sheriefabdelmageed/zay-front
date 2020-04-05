@@ -5,9 +5,10 @@ import { getSlides, saveSlide } from "./../services/home-service";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import collection from "./../services/collection";
+import Chips from "react-chips";
 
 const getCollections = collection.getCollections;
-const getSubCollections = collection.getSubCollections;
+//const getSubCollections = collection.getSubCollections;
 
 const tempCollections = [
   { node: { id: 1, title: "Occasions" } },
@@ -17,10 +18,10 @@ const tempCollections = [
   { node: { id: 5, title: "Art Night" } }
 ];
 const tempSubCollections = [
-  { node: { id: 1, title: "The Ramadan Edit" } },
-  { node: { id: 2, title: "Dresses" } },
-  { node: { id: 3, title: "Luxe Bags" } },
-  { node: { id: 4, title: "Accessories" } }
+  "The Ramadan Edit",
+  "Dresses",
+  "Luxe Bags",
+  "Accessories"
 ];
 
 class Home extends Component {
@@ -33,7 +34,6 @@ class Home extends Component {
     uploadedFile: {},
     collections: [],
     SubCollectionsList: [],
-    SubCollections: [],
     styleList: ["Grid", "Column", "Row"]
   };
 
@@ -51,12 +51,14 @@ class Home extends Component {
         Collections = tempCollections;
       }
 
+      const SubCollectionsList = tempSubCollections;
       const slides = data.Content;
       this.setState({
         slides,
         loading: false,
         editMode: false,
-        Collections
+        Collections,
+        SubCollectionsList
       });
     } catch (error) {
       console.log(error);
@@ -64,23 +66,15 @@ class Home extends Component {
     }
   }
 
-  editSlide = async s => {
+  editSlide = s => {
     const index = this.getSelectedSlideIndex(s);
     const selectedSlide = { ...s };
     if (!selectedSlide.SubCollections) selectedSlide.SubCollections = [];
 
-    let { data: dataCollection } = await getSubCollections();
-    let SubCollectionsList = dataCollection?.data?.data?.collections?.edges;
-    SubCollectionsList = null;
-    if (!SubCollectionsList) {
-      SubCollectionsList = tempSubCollections;
-    }
-
     this.setState({
       editMode: true,
       selectedSlide,
-      selectedIndex: index,
-      SubCollectionsList
+      selectedIndex: index
     });
   };
 
@@ -138,21 +132,12 @@ class Home extends Component {
     this.setState({ selectedSlide });
   };
 
-  handleCollectionInputChange = async e => {
-    debugger;
+  handleCollectionInputChange = e => {
     const value = e.currentTarget.value;
     if (!value) return null;
     const selectedSlide = { ...this.state.selectedSlide };
     selectedSlide.Collection = value;
-
-    let { data: dataCollection } = await getSubCollections();
-    let SubCollectionsList = dataCollection?.data?.metafields;
-    SubCollectionsList = null;
-    if (!SubCollectionsList) {
-      SubCollectionsList = tempSubCollections;
-    }
-
-    this.setState({ selectedSlide, SubCollectionsList });
+    this.setState({ selectedSlide });
   };
 
   getSelectedSlideIndex = selectedSlide => {
@@ -174,8 +159,7 @@ class Home extends Component {
         Height: ""
       }
     };
-    const SubCollectionsList = [];
-    this.setState({ selectedSlide, editMode: true, SubCollectionsList });
+    this.setState({ selectedSlide, editMode: true });
   };
 
   deletSlide = s => {
@@ -212,15 +196,9 @@ class Home extends Component {
     }
   };
 
-  addSubCollectionInputChange = ({ currentTarget }) => {
-    const SubCollection = currentTarget.value;
-    if (!SubCollection) return;
+  addSubCollectionInputChange = chips => {
     let selectedSlide = { ...this.state.selectedSlide };
-
-    const index = selectedSlide.SubCollections.indexOf(SubCollection);
-    if (index === -1 || index === undefined)
-      selectedSlide.SubCollections.push(SubCollection);
-
+    selectedSlide.SubCollections = chips;
     this.setState({ selectedSlide });
   };
 
@@ -344,47 +322,17 @@ class Home extends Component {
                       </div>
                     </div>
                     <div className="form-row">
-                      <div className="form-group col-md-4 col-sm-12">
-                        <label htmlFor="SubCollections">
-                          Add Sub Collection
-                        </label>
-                        <select
-                          className="form-control"
-                          name="SubCollections"
-                          id="SubCollections"
-                          onChange={this.addSubCollectionInputChange}
-                        >
-                          <option value="">Select a Sub Collection</option>
-                          {this.state.SubCollectionsList?.map(c => (
-                            <option key={c?.node?.id} value={c?.node?.title}>
-                              {c?.node?.title}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="form-group col-md-8 col-sm-12">
+                      <div className="form-group col-md-12 col-sm-12">
                         <label htmlFor="SubCollections">
                           Sub Collections List
                         </label>
-                        <ul
-                          className="form-control"
-                          style={{
-                            height: "auto",
-                            minHeight: "37px",
-                            padding: "0px"
-                          }}
-                        >
-                          {this.state.selectedSlide.SubCollections.map(sc => (
-                            <li
-                              className="chip"
-                              key={sc}
-                              onClick={() => this.deleteSubCollection(sc)}
-                            >
-                              <i className="item">X</i>
-                              <span className="item-text">{sc}</span>
-                            </li>
-                          ))}
-                        </ul>
+                        <div>
+                          <Chips
+                            value={this.state.selectedSlide.SubCollections}
+                            onChange={this.addSubCollectionInputChange}
+                            suggestions={this.state.SubCollectionsList}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="form-row">
