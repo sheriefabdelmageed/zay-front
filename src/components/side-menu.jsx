@@ -67,7 +67,7 @@ class SideMenu extends Component {
           {categories.map(c => (
             <div key={c} className={itemStyle}>
               <i className={this.getIcon(c)}></i>
-              <NavLink to={`/${c}`}>{this.getLinkName(c)}</NavLink>
+              <NavLink to={`/#/${c}`}>{this.getLinkName(c)}</NavLink>
             </div>
           ))}
           <div className="list-group-item list-group-item-action mb-4">
