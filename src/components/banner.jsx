@@ -52,7 +52,8 @@ class Banner extends Component {
     });
   };
 
-  saveChanges = async () => {
+  saveChanges = async e => {
+    e.preventDefault();
     try {
       this.setState({ loading: true });
       const data = { ...this.state.data };

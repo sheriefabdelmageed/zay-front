@@ -78,7 +78,8 @@ class Home extends Component {
     });
   };
 
-  saveChanges = async () => {
+  saveChanges = async e => {
+    e.preventDefault();
     try {
       this.setState({ loading: true });
       const slides = [...this.state.slides];
