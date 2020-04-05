@@ -1,25 +1,14 @@
 import React, { Component, Fragment } from "react";
-import _ from "lodash";
+
 import { toast } from "react-toastify";
-import { getSlides, saveSlide } from "./../services/slides-service";
+import { getBanner, saveBanner } from "./../services/banner-service";
 import FileUpload from "./file-upload";
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import getCollections from "./../services/collection";
 
-const tempCollections = [
-  { node: { id: 1, title: "Occasions" } },
-  { node: { id: 2, title: "Shop Looks" } },
-  { node: { id: 3, title: "Featured" } },
-  { node: { id: 4, title: "Everyone" } },
-  { node: { id: 5, title: "Art Night" } }
-];
-
-class Slides extends Component {
+class Banner extends Component {
   state = {
-    slides: [],
-    selectedSlide: {},
-    selectedIndex: null,
+    data: {},
     editMode: false,
     loading: true,
     file: "",
@@ -29,9 +18,9 @@ class Slides extends Component {
   };
 
   handleUpload = filepath => {
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.ImageURL = filepath;
-    this.setState({ selectedSlide });
+    const data = { ...this.state.data };
+    data.ImageURL = filepath;
+    this.setState({ data });
   };
 
   cancelChanges() {
@@ -40,55 +29,44 @@ class Slides extends Component {
 
   async componentDidMount() {
     try {
-      const { data } = await getSlides();
+      const { data } = await getBanner();
       const { data: dataCollection } = await getCollections();
-      let collections = dataCollection?.data?.data?.collections?.edges;
-      if (!collections) {
-        collections = tempCollections;
-      }
-      const slides = data.Images;
-      this.setState({ slides, loading: false, editMode: false, collections });
+      const collections = dataCollection?.data?.data?.collections?.edges;
+      this.setState({
+        data: data,
+        loading: false,
+        editMode: false,
+        collections
+      });
     } catch (error) {
-      console.log(error);
       toast.error("Failed to load data");
     }
   }
 
-  editSlide = s => {
-    const index = this.getSelectedSlideIndex(s);
-    const selectedSlide = { ...s };
+  editSlide = banner => {
+    const data = { ...banner };
     this.setState({
-      editMode: true,
-      selectedSlide,
-      selectedIndex: index
+      data,
+      editMode: true
     });
   };
 
   saveChanges = async () => {
     try {
       this.setState({ loading: true });
-      const slides = [...this.state.slides];
-      const { selectedIndex } = this.state;
-
-      if (selectedIndex === null) {
-        slides.push(this.state.selectedSlide);
-      } else {
-        slides[selectedIndex] = this.state.selectedSlide;
-      }
-
+      const data = { ...this.state.data };
       const obj = {
-        key: "Promotion",
-        value: { Images: slides }
+        key: "HomePageTag",
+        value: { ...data }
       };
 
-      await saveSlide(obj);
+      await saveBanner(obj);
       toast.success("Changes saved successfully");
 
       this.setState({
-        slides,
+        data,
         editMode: false,
-        loading: false,
-        selectedIndex: null
+        loading: false
       });
     } catch (error) {
       this.setState({ loading: false });
@@ -99,117 +77,55 @@ class Slides extends Component {
 
   handleArHeadLineChange = e => {
     const value = e.currentTarget.value;
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.Text[1].Headline = value;
-    this.setState({ selectedSlide });
+    const data = { ...this.state.data };
+    data.Text[1].Headline = value;
+    this.setState({ data });
   };
 
   handleEnHeadLineChange = e => {
     const value = e.currentTarget.value;
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.Text[0].Headline = value;
-    this.setState({ selectedSlide });
+    const data = { ...this.state.data };
+    data.Text[0].Headline = value;
+    this.setState({ data });
   };
 
   handleArTagLineChange = e => {
     const value = e.currentTarget.value;
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.Text[1].Tagline = value;
-    this.setState({ selectedSlide });
+    const data = { ...this.state.data };
+    data.Text[1].Tagline = value;
+    this.setState({ data });
   };
 
   handleEnTagLineChange = e => {
     const value = e.currentTarget.value;
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.Text[0].Tagline = value;
-    this.setState({ selectedSlide });
+    const data = { ...this.state.data };
+    data.Text[0].Tagline = value;
+    this.setState({ data });
   };
 
   handleArColorChange = e => {
     const value = e.currentTarget.value;
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.Text[1].Color = value;
-    this.setState({ selectedSlide });
+    const data = { ...this.state.data };
+    data.Text[1].Color = value;
+    this.setState({ data });
   };
 
   handleEnColorChange = e => {
     const value = e.currentTarget.value;
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.Text[0].TextColor = value;
-    this.setState({ selectedSlide });
+    const data = { ...this.state.data };
+    data.Text[0].TextColor = value;
+    this.setState({ data });
   };
 
   handleCollectionInputChange = e => {
     const value = e.currentTarget.value;
-    const selectedSlide = { ...this.state.selectedSlide };
-    selectedSlide.Collection = value;
-    this.setState({ selectedSlide });
-  };
-
-  getSelectedSlideIndex = selectedSlide => {
-    const index = _.findIndex(this.state.slides, selectedSlide);
-    return index;
-  };
-
-  addNewSlide = () => {
-    const selectedSlide = {
-      ImageURL: "",
-      Collection: "",
-      Text: [
-        {
-          Locale: "en",
-          Headline: "",
-          Tagline: "",
-          TextColor: "000000"
-        },
-        {
-          Locale: "ar",
-          Headline: "",
-          Tagline: "",
-          Color: "FFFFFF"
-        }
-      ]
-    };
-
-    this.setState({ selectedSlide, editMode: true });
-  };
-
-  deletSlide = s => {
-    try {
-      confirmAlert({
-        title: "Confirm to delete",
-        message: "Are you sure to do this.",
-        buttons: [
-          {
-            label: "Yes",
-            onClick: async () => {
-              const index = this.getSelectedSlideIndex(s);
-              const slides = [...this.state.slides];
-              slides.splice(index, 1);
-
-              const obj = {
-                key: "Promotion",
-                value: { Images: slides }
-              };
-
-              await saveSlide(obj);
-              toast.success("Changes saved successfully");
-              this.setState({ slides });
-            }
-          },
-          {
-            label: "No",
-            onClick: () => {}
-          }
-        ]
-      });
-    } catch (error) {
-      toast.error("Error delete slide");
-    }
+    const data = { ...this.state.data };
+    data.CollectionName = value;
+    this.setState({ data });
   };
 
   render() {
-    const { slides, editMode, selectedSlide, loading } = this.state;
+    const { data, editMode, loading } = this.state;
     return (
       <Fragment>
         {loading && (
@@ -228,17 +144,8 @@ class Slides extends Component {
               <div>
                 <h5>
                   <i className="far fa-images mr-2"></i>
-                  Promotion Section
+                  Banner Section
                 </h5>
-                <div className="row mb-2 d-flex justify-content-end pr-4">
-                  <button
-                    className="btn btn-primary"
-                    onClick={this.addNewSlide}
-                  >
-                    <i className="fas fa-plus mr-2"></i>
-                    Add new
-                  </button>
-                </div>
                 <table className="table borders">
                   <thead>
                     <tr>
@@ -249,11 +156,10 @@ class Slides extends Component {
                       <th>Tagline-AR</th>
                       <th>Tagline-EN</th>
                       <th>Edit</th>
-                      <th>Delete</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {slides.map(s => (
+                    {[data]?.map(s => (
                       <tr key={s.ImageURL}>
                         <td>
                           <img
@@ -263,19 +169,14 @@ class Slides extends Component {
                             alt={s.collection}
                           />
                         </td>
-                        <td>{s.Collection}</td>
-                        <td>{s?.Text[1]?.Headline}</td>
-                        <td>{s?.Text[0]?.Headline}</td>
-                        <td>{s?.Text[1]?.Tagline}</td>
-                        <td>{s?.Text[0]?.Tagline}</td>
+                        <td>{s.CollectionName}</td>
+                        <td>{s.Text[1].Headline}</td>
+                        <td>{s.Text[0].Headline}</td>
+                        <td>{s.Text[1].Tagline}</td>
+                        <td>{s.Text[0].Tagline}</td>
                         <td>
                           <button onClick={() => this.editSlide(s)}>
                             <i className="fa fa-edit"></i>
-                          </button>
-                        </td>
-                        <td>
-                          <button onClick={() => this.deletSlide(s)}>
-                            <i className="fas fa-trash-alt"></i>
                           </button>
                         </td>
                       </tr>
@@ -291,8 +192,8 @@ class Slides extends Component {
                   <img
                     style={{ width: "100%" }}
                     className="image"
-                    src={selectedSlide.ImageURL || "/assets/no-image.png"}
-                    alt={selectedSlide.collection}
+                    src={data.ImageURL || "/assets/no-image.png"}
+                    alt={data.collectionName}
                   />
                   <hr />
                   <FileUpload
@@ -306,7 +207,7 @@ class Slides extends Component {
                 <div className="col-md-7 col-sm-12">
                   <h5>
                     <i className="far fa-images mr-2"></i>
-                    Slide Details
+                    Banner Details
                   </h5>
                   <hr />
                   <form className="form">
@@ -317,13 +218,13 @@ class Slides extends Component {
                           className="form-control"
                           name="collection"
                           id="collection"
-                          value={selectedSlide.Collection}
+                          value={data.Collection}
                           onChange={this.handleCollectionInputChange}
                         >
                           <option value="">Select a collection</option>
                           {this.state.collections?.map(c => (
-                            <option key={c?.node?.id} value={c?.node?.title}>
-                              {c?.node?.title}
+                            <option key={c.node.id} value={c.node.title}>
+                              {c.node.title}
                             </option>
                           ))}
                         </select>
@@ -340,7 +241,7 @@ class Slides extends Component {
                           id="ar"
                           name="ar"
                           className="form-control"
-                          value={selectedSlide.Text[1].Headline}
+                          value={data.Text[1].Headline}
                         />
                       </div>
                       <div className="form-group col-md-5 offset-md-1 col-sm-12">
@@ -352,7 +253,7 @@ class Slides extends Component {
                           id="en"
                           name="en"
                           className="form-control"
-                          value={selectedSlide.Text[0].Headline}
+                          value={data.Text[0].Headline}
                         />
                       </div>
                     </div>
@@ -366,7 +267,7 @@ class Slides extends Component {
                           id="ar"
                           name="ar"
                           className="form-control"
-                          value={selectedSlide.Text[1].Tagline}
+                          value={data.Text[1].Tagline}
                         />
                       </div>
                       <div className="form-group form-group col-md-5 offset-md-1 col-sm-12">
@@ -378,7 +279,7 @@ class Slides extends Component {
                           id="en"
                           name="en"
                           className="form-control"
-                          value={selectedSlide.Text[0].Tagline}
+                          value={data.Text[0].Tagline}
                         />
                       </div>
                     </div>
@@ -390,7 +291,7 @@ class Slides extends Component {
                           type="color"
                           id="color"
                           name="color"
-                          value={`${selectedSlide.Text[1].Color}`}
+                          value={`${data.Text[1].Color}`}
                           onChange={this.handleArColorChange}
                         />
                       </div>
@@ -401,7 +302,7 @@ class Slides extends Component {
                           type="color"
                           id="color"
                           name="color"
-                          value={`${selectedSlide.Text[0].TextColor}`}
+                          value={`${data.Text[0].TextColor}`}
                           onChange={this.handleEnColorChange}
                         />
                       </div>
@@ -433,4 +334,4 @@ class Slides extends Component {
   }
 }
 
-export default Slides;
+export default Banner;

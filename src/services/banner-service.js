@@ -3,10 +3,10 @@ import config from "./../config.json";
 
 const apiUrl = `${config.api}/config`;
 
-export const getSlides = () => {
-  return http.get(apiUrl + "/categories/Promotion");
+export const getBanner = () => {
+  return http.get(apiUrl + "/categories/HomePageTag");
 };
 
-export const saveSlide = obj => {
+export const saveBanner = obj => {
   return http.post(apiUrl + "/update", obj);
 };

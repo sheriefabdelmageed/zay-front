@@ -7,6 +7,7 @@
   overflow: auto;
   position: fixed;
   height: 100%;
+  color: gray;
 }
 
 .side-menu .list-group-item {
@@ -15,8 +16,12 @@
   font-size: 12px;
 }
 
+a {
+  color: gray;
+}
 .side-menu .active {
-  background-color: gray;
+  color: green;
+  font-weight: bold;
   border: none;
 }
 
@@ -66,6 +71,40 @@ select {
 
 p {
   text-align: center;
+}
+
+.chip {
+  display: inline-block;
+  padding: 0 25px;
+  height: 30px;
+  width: auto;
+  font-size: 12px;
+  line-height: 30px;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+  margin-left: 0px;
+  margin-right: 5px;
+  margin-top: 2px;
+}
+
+.chip .item {
+  float: right;
+  font-size: 12px;
+  border-radius: 50%;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.chip .item-text {
+  margin-left: 10px;
+}
+
+.color-circle {
+  width: 50px;
+  height: 25px;
+  cursor: inherit;
+  margin: none;
+  padding: none;
+  border: none;
 }
 
 @media only screen and (max-width: 768px) {

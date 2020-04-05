@@ -2,10 +2,13 @@ import React, { Fragment } from "react";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import "react-toastify/dist/ReactToastify.css";
-import Slides from "./components/slides";
 import NavBar from "./components/nav-bar";
 import SideMenu from "./components/side-menu";
-
+import Home from "./components/home";
+import { Route, Redirect, Switch } from "react-router-dom";
+import Slides from "./components/slides";
+import Banner from "./components/banner";
+import NotFound from "./components/not-found";
 function App() {
   return (
     <Fragment>
@@ -17,7 +20,20 @@ function App() {
             <SideMenu />
           </div>
           <div className="col-md-10 col-sm-12 p-3 offset-md-2">
-            <Slides />
+            <Switch>
+              <Route path="/Promotion" component={Slides}></Route>
+              <Route path="/Home">
+                <Home />
+              </Route>
+              <Route path="/HomePageTag">
+                <Banner />
+              </Route>
+              <Route path="/not-found">
+                <NotFound />
+              </Route>
+              <Route path="/" component={Home} exact></Route>
+              <Redirect to="/not-found"></Redirect>
+            </Switch>
           </div>
         </div>
       </div>
