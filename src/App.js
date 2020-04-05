@@ -21,18 +21,18 @@ function App() {
           </div>
           <div className="col-md-10 col-sm-12 p-3 offset-md-2">
             <Switch>
-              <Route path="/#/Promotion" component={Slides}></Route>
-              <Route path="/#/Home">
+              <Route path="/Promotion" component={Slides}></Route>
+              <Route path="/Home">
                 <Home />
               </Route>
-              <Route path="/#/HomePageTag">
+              <Route path="/HomePageTag">
                 <Banner />
               </Route>
-              <Route path="/#/not-found">
+              <Route path="/not-found">
                 <NotFound />
               </Route>
               <Route path="/" component={Home} exact></Route>
-              <Redirect to="/#/not-found"></Redirect>
+              <Redirect to="/not-found"></Redirect>
             </Switch>
           </div>
         </div>
