@@ -36,9 +36,11 @@ class Slides extends Component {
     this.setState({ selectedSlide });
   };
 
-  cancelChanges() {
-    this.componentDidMount();
-  }
+  cancelChanges = async () => {
+    const { data } = await getSlides();
+    const slides = data.Images;
+    this.setState({ slides, editMode: false });
+  };
 
   async componentDidMount() {
     try {
@@ -66,8 +68,7 @@ class Slides extends Component {
     });
   };
 
-  saveChanges = async e => {
-    e.preventDefault();
+  saveChanges = async () => {
     try {
       this.setState({ loading: true });
       const slides = [...this.state.slides];
@@ -312,7 +313,7 @@ class Slides extends Component {
                     Slide Details
                   </h5>
                   <hr />
-                  <form className="form">
+                  <form className="form" onSubmit={e => e.preventDefault()}>
                     <div className="form-row">
                       <div className="form-group col-md-5">
                         <label htmlFor="collection">Collection</label>
@@ -412,18 +413,20 @@ class Slides extends Component {
 
                     <hr />
                     <div className="form-group">
-                      <button
+                      <input
+                        onChange={() => {}}
                         className="btn btn-primary mr-2"
                         onClick={this.saveChanges}
-                      >
-                        Save Changes
-                      </button>
-                      <button
+                        input="button"
+                        value="Save Changes"
+                      />
+                      <input
+                        onChange={() => {}}
                         className="btn btn-danger"
                         onClick={this.cancelChanges}
-                      >
-                        Cancel
-                      </button>
+                        value="Cancel"
+                        type="button"
+                      />
                     </div>
                   </form>
                 </div>

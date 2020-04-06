@@ -24,9 +24,10 @@ class Banner extends Component {
     this.setState({ data });
   };
 
-  cancelChanges() {
-    this.componentDidMount();
-  }
+  cancelChanges = async () => {
+    const { data } = await getBanner();
+    this.setState({ data, editMode: false });
+  };
 
   async componentDidMount() {
     try {
@@ -52,8 +53,7 @@ class Banner extends Component {
     });
   };
 
-  saveChanges = async e => {
-    e.preventDefault();
+  saveChanges = async () => {
     try {
       this.setState({ loading: true });
       const data = { ...this.state.data };
@@ -126,6 +126,10 @@ class Banner extends Component {
     this.setState({ data });
   };
 
+  onSubmit = e => {
+    e.preventDefault();
+    return;
+  };
   render() {
     const { data, editMode, loading } = this.state;
     return (
@@ -212,7 +216,7 @@ class Banner extends Component {
                     Banner Details
                   </h5>
                   <hr />
-                  <form className="form">
+                  <form className="form" onSubmit={this.onSubmit}>
                     <div className="form-row">
                       <div className="form-group col-md-5">
                         <label htmlFor="collection">Collection</label>
@@ -312,18 +316,20 @@ class Banner extends Component {
 
                     <hr />
                     <div className="form-group">
-                      <button
+                      <input
+                        onChange={() => {}}
                         className="btn btn-primary mr-2"
                         onClick={this.saveChanges}
-                      >
-                        Save Changes
-                      </button>
-                      <button
+                        input="button"
+                        value="Save Changes"
+                      />
+                      <input
+                        onChange={() => {}}
                         className="btn btn-danger"
                         onClick={this.cancelChanges}
-                      >
-                        Cancel
-                      </button>
+                        value="Cancel"
+                        type="button"
+                      />
                     </div>
                   </form>
                 </div>
