@@ -265,25 +265,25 @@ class Banner extends Component {
                     </div>
                     <div className="form-row">
                       <div className="form-group col-md-5 col-sm-12">
-                        <label htmlFor="ar">Arabic Tagline</label>
+                        <label htmlFor="artl">Arabic Tagline</label>
                         <input
                           onChange={this.handleArTagLineChange}
                           placeholder="Arabic Tagline"
                           type="text"
-                          id="ar"
-                          name="ar"
+                          id="artl"
+                          name="artl"
                           className="form-control"
                           value={data.Text[1].Tagline}
                         />
                       </div>
                       <div className="form-group form-group col-md-5 offset-md-1 col-sm-12">
-                        <label htmlFor="en">English Tagline</label>
+                        <label htmlFor="entl">English Tagline</label>
                         <input
                           placeholder="English Tagline"
                           onChange={this.handleEnTagLineChange}
                           type="text"
-                          id="en"
-                          name="en"
+                          id="entl"
+                          name="entl"
                           className="form-control"
                           value={data.Text[0].Tagline}
                         />
@@ -291,23 +291,23 @@ class Banner extends Component {
                     </div>
                     <div className="form-row">
                       <div className="form-group col-md-5 col-sm-12">
-                        <label htmlFor="color">Color for Arabic</label>
+                        <label htmlFor="colorAr">Color for Arabic</label>
                         <input
                           className="form-control"
                           type="color"
-                          id="color"
-                          name="color"
+                          id="colorAr"
+                          name="colorAr"
                           value={`#${data.Text[1].Color}`}
                           onChange={this.handleArColorChange}
                         />
                       </div>
                       <div className="form-group form-group col-md-5 offset-md-1 col-sm-12">
-                        <label htmlFor="color">Color for English</label>
+                        <label htmlFor="colorEn">Color for English</label>
                         <input
                           className="form-control"
                           type="color"
-                          id="color"
-                          name="color"
+                          id="colorEn"
+                          name="colorEn"
                           value={`#${data.Text[0].TextColor}`}
                           onChange={this.handleEnColorChange}
                         />
